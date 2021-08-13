@@ -143,7 +143,7 @@ public class InterBankServiceImpl implements InterBankService {
 		}
 		
 		//Setting Account Types to the already created UserBean object
-		query = "select AccountType from TypeTable where TypeCode = (select TypeCode from Accounts where User_UserID = (select UserID from User where Username = ?";
+		query = "select AccountType from TypeTable where TypeCode = (select TypeCode from Accounts where User_UserID = (select UserID from User where Username = ?))";
 		PreparedStatement prep = con.prepareStatement(query);
 		prep.setString(1,username);
 		rs = prep.executeQuery();
@@ -155,14 +155,16 @@ public class InterBankServiceImpl implements InterBankService {
 		user.setAccountTypes(accountTypes);
 		
 		//Setting Balance to the already created UserBean object
-		query= "select Balance from Accounts where User_UserID=(select UserID from User where Username = ?";
+		query= "select Balance from Accounts where User_UserID=(select UserID from User where Username = ?)";
 		prep = con.prepareStatement(query);
+		prep.setString(1,username);
 		rs=prep.executeQuery();
-		double balance=0.0;
+		String balance="";
 		while(rs.next()) {
-			balance = rs.getDouble(1);
+			balance = rs.getString(1);
 		}
-		user.setAccBalance(balance);
+		double bal = Double.parseDouble(balance.substring((balance.indexOf('.')+1)));
+		user.setAccBalance(bal);
 		
 		return user;
 	}

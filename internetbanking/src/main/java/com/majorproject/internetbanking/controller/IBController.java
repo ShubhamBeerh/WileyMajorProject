@@ -39,7 +39,7 @@ public class IBController {
 			return "Login Successfull!";
 	}
 	
-	@PostMapping("/Mainpage/view/{username}")
+	@GetMapping("/Mainpage/view/{username}")
 	public UserBean viewUser(@PathVariable String username) throws SQLException {
 		return this.inter.viewUser(username);
 	}
